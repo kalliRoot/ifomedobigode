@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard · HL Serviços</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <div class="logo-icon"><i class="fa-solid fa-bolt"></i></div>
+                <h2>HL Serviços</h2>
+            </div>
+
+            <nav class="menu">
+                <a href="#" class="menu-item active" data-tab="visao-geral">
+                    <i class="fa-solid fa-chart-pie"></i> Visão Geral
+                </a>
+                <a href="#" class="menu-item" data-tab="agendamentos">
+                    <i class="fa-solid fa-calendar-check"></i> Agendamentos
+                </a>
+                <a href="#" class="menu-item" data-tab="horarios">
+                    <i class="fa-solid fa-clock"></i> Controle de Agenda
+                </a>
+            </nav>
+
+            <div class="bot-status">
+                <div class="status-indicator online"></div>
+                <span>Bot Online</span>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="topbar">
+                <div class="greeting">
+                    <h1>Painel de Controle</h1>
+                    <p>Gerencie seus agendamentos e horários facilmente.</p>
+                </div>
+                <div class="actions">
+                    <div id="live-clock" class="glass">
+                        <i class="fa-regular fa-clock" style="font-size: 1.4rem; color: var(--primary-color); text-shadow: var(--glow);"></i>
+                        <div style="display: flex; flex-direction: column; justify-content: center; text-align: right;">
+                            <div id="live-time">00:00:00</div>
+                            <div id="live-date">Segunda-feira, 01/06</div>
+                        </div>
+                    </div>
+                    <button id="refreshBtn" class="btn btn-icon" title="Atualizar Dados">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                    <div class="theme-toggle">
+                        <i class="fa-solid fa-moon"></i>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <!-- VISÃO GERAL TAB -->
+                <section id="visao-geral" class="tab-pane active">
+                    <div class="stats-grid">
+                        <div class="stat-card glass">
+                            <div class="stat-icon blue"><i class="fa-solid fa-calendar-day"></i></div>
+                            <div class="stat-details">
+                                <h3>Total de Agendamentos</h3>
+                                <p class="stat-number" id="stat-total-agendamentos">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card glass">
+                            <div class="stat-icon green"><i class="fa-solid fa-check-circle"></i></div>
+                            <div class="stat-details">
+                                <h3>Próximo Atendimento</h3>
+                                <p class="stat-text" id="stat-proximo-atendimento">Nenhum</p>
+                            </div>
+                        </div>
+                        <div class="stat-card glass">
+                            <div class="stat-icon purple"><i class="fa-solid fa-user-clock"></i></div>
+                            <div class="stat-details">
+                                <h3>Horários Livres Hoje</h3>
+                                <p class="stat-number" id="stat-horarios-livres">-</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="recent-section">
+                        <h2>Agendamentos Recentes</h2>
+                        <div class="table-container glass">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Cliente</th>
+                                        <th>Serviço</th>
+                                        <th>Data e Hora</th>
+                                        <th>Status</th>
+                                        <th>Endereço</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-table-body">
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- AGENDAMENTOS TAB -->
+                <section id="agendamentos" class="tab-pane">
+                    <div class="section-header">
+                        <h2>Todos os Agendamentos</h2>
+                    </div>
+                    <div class="table-container glass full-height">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Telefone</th>
+                                    <th>Serviço / Tipo</th>
+                                    <th>Dia / Horário</th>
+                                    <th>Status</th>
+                                    <th>Endereço</th>
+                                    <th>Registrado em</th>
+                                </tr>
+                            </thead>
+                            <tbody id="all-appointments-body">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- HORÁRIOS TAB -->
+                <section id="horarios" class="tab-pane">
+                    <div class="section-header">
+                        <h2>Controle de Agenda</h2>
+                        <p>Bloqueie ou libere horários manualmente. O que estiver bloqueado aqui não será oferecido aos clientes no WhatsApp.</p>
+                    </div>
+
+                    <div class="agenda-grid" id="agenda-grid">
+                        <div class="loading">Carregando agenda...</div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast">Ação realizada com sucesso!</div>
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="modal-overlay"></div>
+
+    <!-- Add/Edit Slot Modal -->
+    <div class="modal glass" id="slot-modal">
+        <h3 id="modal-title">Adicionar Horário</h3>
+        <p id="modal-desc" style="color:var(--text-muted);font-size:0.85rem;margin-bottom:18px;">Insira o horário no formato 00h00.</p>
+        <div class="input-group">
+            <input type="text" id="slot-time-input" placeholder="Ex: 09h00" class="modal-input">
+        </div>
+        <input type="hidden" id="modal-data-input">
+        <input type="hidden" id="modal-old-hora-input">
+        <input type="hidden" id="modal-action-input">
+        <div class="modal-actions">
+            <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+            <button class="btn btn-primary" onclick="saveSlot()">Salvar</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+    <!-- Reagendar Cliente Modal -->
+    <div class="modal-overlay" id="reschedule-modal-overlay">
+        <div class="modal glass" id="reschedule-modal">
+            <h3 style="margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;">Reagendar Cliente</h3>
+
+            <input type="hidden" id="reschedule-numero">
+            <input type="hidden" id="reschedule-old-data">
+            <input type="hidden" id="reschedule-old-hora">
+
+            <div class="form-group">
+                <label>Nova Data (DD/MM/YYYY)</label>
+                <input type="text" id="reschedule-new-data" placeholder="Ex: 15/06/2026">
+            </div>
+
+            <div class="form-group">
+                <label>Novo Horário</label>
+                <input type="text" id="reschedule-new-hora" placeholder="Ex: 14h00">
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn btn-secondary" style="flex: 1;" onclick="closeRescheduleModal()">Cancelar</button>
+                <button class="btn btn-primary" style="flex: 1;" onclick="submitReschedule()">Salvar</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
